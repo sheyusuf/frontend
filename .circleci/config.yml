@@ -51,7 +51,7 @@ jobs:
             aws cloudformation deploy \
             --template-file cloudfront.yml \
             --stack-name production-distro \
-            --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
+            --parameter-overrides PipelineID="shehu-bucket-${CIRCLE_WORKFLOW_ID:0:7}"
 
   # Destroy the previous production version's S3 bucket and CloudFormation stack. 
   clean_up_old_front_end:
@@ -75,7 +75,9 @@ jobs:
 workflows:
   workflow:
     jobs:
-      # - create_and_deploy_front_end
-      - get_last_deployment_id
+      - create_and_deploy_front_end
       - promote_to_production
-      - clean_up_old_front_end
+          requres:
+            - create_and_deploy_front_end
+      - get_last_deployment_id
+      # - clean_up_old_front_end
